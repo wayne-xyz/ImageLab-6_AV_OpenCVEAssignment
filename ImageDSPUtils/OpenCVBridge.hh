@@ -19,7 +19,6 @@
 
 // set the image for processing later
 -(void) setImage:(CIImage*)ciFrameImage
-      withBounds:(CGRect)rect
       andContext:(CIContext*)context;
 
 //get the image raw opencv
@@ -28,6 +27,8 @@
 //get the image inside the original bounds
 -(CIImage*)getImageComposite;
 
+
+-(bool)processFinger;
 // call this to perfrom processing (user controlled for better transparency)
 -(void)processImage;
 

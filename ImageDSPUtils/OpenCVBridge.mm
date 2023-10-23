@@ -26,7 +26,20 @@ using namespace cv;
 
 #pragma mark ===Write Your Code Here===
 // you can define your own functions here for processing the image
-
+-(bool)processFinger{
+    cv::Mat image_cpy;
+    char text[50];
+    Scalar avgPI;
+    
+    cvtColor(_image, image_cpy, CV_BGRA2BGR);
+    avgPI = cv::mean(image_cpy);
+    //sprintf(text, "%0.f %0.f %0.f", agvPI[0], avgPI[1],avgPI[2])
+    
+    
+    printf("%0.f %0.f %0.f", avgPI[0], avgPI[1],avgPI[2]);
+    
+    return false;
+}
 
 #pragma mark Define Custom Functions Here
 -(void)processImage{
@@ -297,25 +310,15 @@ using namespace cv;
 
 
 -(void) setImage:(CIImage*)ciFrameImage
-      withBounds:(CGRect)faceRectIn
       andContext:(CIContext*)context{
-    
-    CGRect faceRect = CGRect(faceRectIn);
-    faceRect = CGRectApplyAffineTransform(faceRect, self.transform);
-    ciFrameImage = [ciFrameImage imageByApplyingTransform:self.transform];
-    
     
     //get face bounds and copy over smaller face image as CIImage
     //CGRect faceRect = faceFeature.bounds;
     _frameInput = ciFrameImage; // save this for later
-    _bounds = faceRect;
-    CIImage *faceImage = [ciFrameImage imageByCroppingToRect:faceRect];
-    CGImageRef faceImageCG = [context createCGImage:faceImage fromRect:faceRect];
-    
     // setup the OPenCV mat fro copying into
-    CGColorSpaceRef colorSpace = CGImageGetColorSpace(faceImageCG);
-    CGFloat cols = faceRect.size.width;
-    CGFloat rows = faceRect.size.height;
+    CGColorSpaceRef colorSpace = CGImageGetColorSpace(ciFrameImage.CGImage);
+    CGFloat cols = ciFrameImage.extent.size.width;
+    CGFloat rows = ciFrameImage.extent.size.height;
     cv::Mat cvMat(rows, cols, CV_8UC4); // 8 bits per component, 4 channels
     _image = cvMat;
     
@@ -330,13 +333,14 @@ using namespace cv;
                                                     //kCGImageAlphaLast |
                                                     kCGBitmapByteOrderDefault); // Bitmap info flags
     // do the copy
-    CGContextDrawImage(contextRef, CGRectMake(0, 0, cols, rows), faceImageCG);
+    CGContextDrawImage(contextRef, CGRectMake(0, 0, cols, rows), ciFrameImage.CGImage);
     
     // release intermediary buffer objects
     CGContextRelease(contextRef);
-    CGImageRelease(faceImageCG);
     
 }
+
+
 
 -(CIImage*)getImage{
     
