@@ -182,8 +182,8 @@ class VisionAnalgesic:NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, MT
             return;
         }
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
+//        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+//            guard let self = self else { return }
             
             self.session = AVCaptureSession()
             self.session?.sessionPreset = AVCaptureSession.Preset(rawValue: self.preset!)
@@ -197,7 +197,7 @@ class VisionAnalgesic:NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, MT
             self.session?.addOutput(output)
             output.connections.first?.videoOrientation = .portrait
             self.session?.startRunning()
-        }
+        //}
     }
  
     //MARK: Delegations functions (Internal)

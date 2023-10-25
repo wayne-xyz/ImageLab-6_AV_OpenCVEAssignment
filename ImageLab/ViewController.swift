@@ -24,6 +24,8 @@ class ViewController: UIViewController   {
     @IBOutlet weak var stageLabel: UILabel!
     @IBOutlet weak var cameraView: MTKView!
     
+    @IBOutlet weak var ToggleCamera: UIButton!
+    @IBOutlet weak var ToggleFlash: UIButton!
     //MARK: ViewController Hierarchy
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +36,7 @@ class ViewController: UIViewController   {
         self.bridge.loadHaarCascade(withFilename: "nose")
         
         self.videoManager = VisionAnalgesic(view: self.cameraView)
-        self.videoManager.setCameraPosition(position: AVCaptureDevice.Position.front)
+        self.videoManager.setCameraPosition(position: AVCaptureDevice.Position.back)
         
         // create dictionary for face detection
         // HINT: you need to manipulate these properties for better face detection efficiency
@@ -59,12 +61,12 @@ class ViewController: UIViewController   {
     func processImageSwift(inputImage:CIImage) -> CIImage{
         
         // detect faces
-        let f = getFaces(img: inputImage)
-        
-        // if no faces, just return original image
-        if f.count == 0 { return inputImage }
-        
-        var retImage = inputImage
+//        let f = getFaces(img: inputImage)
+//        
+//        // if no faces, just return original image
+//        if f.count == 0 { return inputImage }
+//        
+//        var retImage = inputImage
         
         //-------------------Example 1----------------------------------
         // if you just want to process on separate queue use this code
@@ -91,14 +93,22 @@ class ViewController: UIViewController   {
         //You can also send in the bounds of the face to ONLY process the face in OpenCV
         // or any bounds to only process a certain bounding region in OpenCV
         
-        self.bridge.setImage(retImage,
-                             withBounds: f[0].bounds, // the first face bounds
+        self.bridge.setImage(inputImage,
+                             withBounds: inputImage.extent, // the first face bounds
                              andContext: self.videoManager.getCIContext())
         
-        self.bridge.processImage()
-        retImage = self.bridge.getImageComposite() // get back opencv processed part of the image (overlayed on original)
+        if self.bridge.processFinger(){
+            ToggleCamera.isEnabled = false
+            ToggleFlash.isEnabled = false
+            self.videoManager.turnOnFlashwithLevel(1.0)
+        }else{
+            ToggleCamera.isEnabled = true
+            ToggleFlash.isEnabled = true
+            self.videoManager.turnOffFlash()
+        }
+        let retImage = self.bridge.getImageComposite() // get back opencv processed part of the image (overlayed on original)
         
-        return retImage
+        return retImage!
     }
     
     //MARK: Setup Face Detection

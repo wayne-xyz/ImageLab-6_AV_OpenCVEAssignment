@@ -30,7 +30,7 @@
 
 // call this to perfrom processing (user controlled for better transparency)
 -(void)processImage;
-
+-(bool)processFinger;
 // for the video manager transformations
 -(void)setTransforms:(CGAffineTransform)trans;
 
