@@ -24,38 +24,45 @@ using namespace cv;
 
 int arr_idx = 0;
 int R[100], G[100], B[100];
-bool over100Frames = false;
+int flashWaitCnt = 0;
 
 #pragma mark ===Write Your Code Here===
 // you can define your own functions here for processing the image
--(bool)processFinger{
+
+// detect if the camera is covered by a finger
+-(bool)processFinger:(bool)flashOn{
     cv::Mat image_cpy;
     char text[50];
     Scalar avgPI;
     bool detected = false;
     
+    // aovid the flash light on and off intermittently
+    if (flashOn)
+        flashWaitCnt++;
+    else
+        flashWaitCnt = 0;
+    if (flashOn && flashWaitCnt < 20)
+        detected = true;
+
     cvtColor(_image, image_cpy, CV_BGRA2BGR);
     avgPI = cv::mean(image_cpy);
     sprintf(text, "R:%0.f G:%0.f B:%0.f", avgPI[0], avgPI[1], avgPI[2]);
     //printf(" %0.f  %0.f  %0.f  \n", avgPI[0], avgPI[1],avgPI[2]);
     cv::putText(_image, text, cv::Point(0, 60), FONT_HERSHEY_PLAIN, 5.0, Scalar::all(255), 3, 2);
     
-//    if ((avgPI[0] < 50 && avgPI[0]> 25 && avgPI[1] < 10 && avgPI[2] < 5) ||
-//        (avgPI[0] > 245 && avgPI[1] < 50 && avgPI[1] < 30 && avgPI[2] < 40 && avgPI[2] > 20)) {
-    if (avgPI[2] < 40 && avgPI[1] < 40){
-        ++arr_idx;
-        if(arr_idx == 100){
-            over100Frames = true;
+    // checking thesholds
+    if ((avgPI[0] < 150 && avgPI[0]> 25 && avgPI[1] < 20 && avgPI[2] < 20) ||
+        (avgPI[0] > 220 && avgPI[1] < 70 && avgPI[2] < 70)) {
+        if(arr_idx < 100){
+            R[arr_idx] = avgPI[0];
+            G[arr_idx] = avgPI[1];
+            B[arr_idx] = avgPI[2];
+            ++arr_idx;
         }
-        arr_idx %= 100;
-        R[arr_idx] = avgPI[0];
-        G[arr_idx] = avgPI[1];
-        B[arr_idx] = avgPI[2];
         detected = true;
     }
-    if(over100Frames){
-        cv::putText(_image, "100 Frames", cv::Point(0, 200), FONT_HERSHEY_PLAIN, 5.0, Scalar::all(255), 3, 2);
-    }
+    if(arr_idx >= 100)
+        cv::putText(_image, "Got 100 Frames", cv::Point(0, 200), FONT_HERSHEY_PLAIN, 5.0, Scalar::all(255), 3, 2);
     return detected;
 }
 
