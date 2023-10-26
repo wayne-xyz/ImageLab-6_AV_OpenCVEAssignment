@@ -34,20 +34,26 @@ class ViewController: UIViewController   {
         self.bridge.loadHaarCascade(withFilename: "nose")
         
         self.videoManager = VisionAnalgesic(view: self.cameraView)
-        self.videoManager.setCameraPosition(position: AVCaptureDevice.Position.front)
         
+        // MARK: Part one  set back camera
+        // use the back camera
+        self.videoManager.setCameraPosition(position: AVCaptureDevice.Position.back)// sometimes bug here, sometime back camera, somtime front one
+        
+        
+        // not for finger function below comments
         // create dictionary for face detection
         // HINT: you need to manipulate these properties for better face detection efficiency
-        let optsDetector = [CIDetectorAccuracy:CIDetectorAccuracyHigh,
-                      CIDetectorNumberOfAngles:11,
-                      CIDetectorTracking:false] as [String : Any]
+//        let optsDetector = [CIDetectorAccuracy:CIDetectorAccuracyHigh,
+//                      CIDetectorNumberOfAngles:11,
+//                      CIDetectorTracking:false] as [String : Any]
         
         // setup a face detector in swift
-        self.detector = CIDetector(ofType: CIDetectorTypeFace,
-                                  context: self.videoManager.getCIContext(), // perform on the GPU is possible
-            options: (optsDetector as [String : AnyObject]))
+//        self.detector = CIDetector(ofType: CIDetectorTypeFace,
+//                                  context: self.videoManager.getCIContext(), // perform on the GPU is possible
+//            options: (optsDetector as [String : AnyObject]))
         
-        self.videoManager.setProcessingBlock(newProcessBlock: self.processImageSwift)
+        // MARK: Part One call the processFinger function
+        self.videoManager.setProcessingBlock(newProcessBlock: self.processFinger)// call the process Finger rather than ProcessImageSwift
         
         if !videoManager.isRunning{
             videoManager.start()
@@ -55,6 +61,17 @@ class ViewController: UIViewController   {
     
     }
     
+    // MARK: Part one set processFinger
+    func processFinger(inputImage:CIImage) -> CIImage{
+        var returnImage=inputImage
+        self.bridge.setImage(returnImage, withBounds: returnImage.extent, andContext: self.videoManager.getCIContext())
+        self.bridge.processFinger()
+        returnImage=self.bridge.getImage()
+        return returnImage
+    }
+    
+    
+    // remove this func when i detect the finger
     //MARK: Process image output
     func processImageSwift(inputImage:CIImage) -> CIImage{
         

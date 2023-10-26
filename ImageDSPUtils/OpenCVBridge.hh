@@ -31,6 +31,10 @@
 // call this to perfrom processing (user controlled for better transparency)
 -(void)processImage;
 
+// MARK: Part one creat a public fucntion
+// Part one call this to detect the finger covering the camera
+-(bool)processFinger;
+
 // for the video manager transformations
 -(void)setTransforms:(CGAffineTransform)trans;
 
