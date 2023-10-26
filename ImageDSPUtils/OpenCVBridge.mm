@@ -46,6 +46,10 @@ using namespace cv;
     printf("this process Finger function");
     NSLog(@"val0,%f",avgPixelIntensity.val[0]);
     
+    //find finger cover the camera
+    if(avgPixelIntensity.val[0]-avgPixelIntensity.val[1]>110){
+        return true;
+    }
     
     return false;
 }

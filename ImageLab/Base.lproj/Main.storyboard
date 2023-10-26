@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,45 +19,45 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="AZh-I9-zyC">
-                                <rect key="frame" x="14" y="762" width="347" height="31"/>
-                                <connections>
-                                    <action selector="setFlashLevel:" destination="BYZ-38-t0r" eventType="valueChanged" id="lU7-s8-q3p"/>
-                                </connections>
-                            </slider>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HqB-mz-Xht">
-                                <rect key="frame" x="255" y="724" width="104" height="30"/>
+                                <rect key="frame" x="255" y="712" width="104" height="30"/>
                                 <state key="normal" title="Toggle Camera"/>
                                 <connections>
                                     <action selector="switchCamera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8o5-A8-Yvy"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsl-XI-9ND">
-                                <rect key="frame" x="16" y="724" width="87" height="30"/>
+                                <rect key="frame" x="16" y="712" width="87" height="30"/>
                                 <state key="normal" title="Toggle Flash"/>
                                 <connections>
                                     <action selector="flash:" destination="BYZ-38-t0r" eventType="touchUpInside" id="p39-Fo-nAF"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stage: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="17Z-Pc-DCH">
-                                <rect key="frame" x="155.66666666666666" y="695" width="64" height="21"/>
+                                <rect key="frame" x="155.66666666666666" y="701" width="64" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <mtkView contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="Xqm-zI-mYg">
-                                <rect key="frame" x="0.0" y="50" width="375" height="625"/>
+                                <rect key="frame" x="0.0" y="50" width="375" height="631"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="bhc-zi-pqW" appends="YES" id="Ntg-q1-A2g"/>
                                     <outletCollection property="gestureRecognizers" destination="QBu-pj-Ata" appends="YES" id="kdI-Og-fi0"/>
                                 </connections>
                             </mtkView>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="AZh-I9-zyC">
+                                <rect key="frame" x="14" y="742" width="347" height="31"/>
+                                <connections>
+                                    <action selector="setFlashLevel:" destination="BYZ-38-t0r" eventType="valueChanged" id="lU7-s8-q3p"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="AZh-I9-zyC" secondAttribute="bottom" constant="20" symbolic="YES" id="60r-75-K1I"/>
+                            <constraint firstAttribute="bottom" secondItem="AZh-I9-zyC" secondAttribute="bottom" constant="40" id="60r-75-K1I"/>
                             <constraint firstItem="fsl-XI-9ND" firstAttribute="leading" secondItem="AZh-I9-zyC" secondAttribute="leading" id="8Qr-hq-s8c"/>
                             <constraint firstItem="fsl-XI-9ND" firstAttribute="baseline" secondItem="HqB-mz-Xht" secondAttribute="baseline" id="9LW-dS-HXP"/>
                             <constraint firstItem="Xqm-zI-mYg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Evu-PC-5UW"/>
@@ -65,12 +65,12 @@
                             <constraint firstItem="17Z-Pc-DCH" firstAttribute="centerX" secondItem="AZh-I9-zyC" secondAttribute="centerX" id="L2W-SG-Ph3"/>
                             <constraint firstItem="HqB-mz-Xht" firstAttribute="trailing" secondItem="AZh-I9-zyC" secondAttribute="trailing" id="NMX-0P-Ett"/>
                             <constraint firstAttribute="trailing" secondItem="Xqm-zI-mYg" secondAttribute="trailing" id="Y7z-Yu-sSb"/>
-                            <constraint firstItem="AZh-I9-zyC" firstAttribute="top" secondItem="HqB-mz-Xht" secondAttribute="bottom" constant="8" symbolic="YES" id="csO-hb-YdJ"/>
+                            <constraint firstItem="AZh-I9-zyC" firstAttribute="top" secondItem="HqB-mz-Xht" secondAttribute="bottom" id="csO-hb-YdJ"/>
                             <constraint firstItem="HqB-mz-Xht" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="dG4-O1-6UF"/>
                             <constraint firstItem="AZh-I9-zyC" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="eNH-ox-Zlt"/>
                             <constraint firstItem="Xqm-zI-mYg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="k10-yX-r11"/>
                             <constraint firstItem="17Z-Pc-DCH" firstAttribute="top" secondItem="Xqm-zI-mYg" secondAttribute="bottom" constant="20" id="nvL-hq-au7"/>
-                            <constraint firstItem="AZh-I9-zyC" firstAttribute="top" secondItem="17Z-Pc-DCH" secondAttribute="bottom" constant="46" id="pbd-8x-fny"/>
+                            <constraint firstItem="AZh-I9-zyC" firstAttribute="top" secondItem="17Z-Pc-DCH" secondAttribute="bottom" constant="20" id="pbd-8x-fny"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="fsl-XI-9ND" secondAttribute="trailing" constant="20" symbolic="YES" id="tu9-Sb-MW5"/>
                         </constraints>
                     </view>

@@ -131,21 +131,22 @@ class ViewController: UIViewController   {
     
     // change the type of processing done in OpenCV
     @IBAction func swipeRecognized(_ sender: UISwipeGestureRecognizer) {
-        switch sender.direction {
-        case .left:
-            if self.bridge.processType <= 10 {
-                self.bridge.processType += 1
-            }
-        case .right:
-            if self.bridge.processType >= 1{
-                self.bridge.processType -= 1
-            }
-        default:
-            break
-            
-        }
-        
-        stageLabel.text = "Stage: \(self.bridge.processType)"
+       // cancel this function for the assignment
+//        switch sender.direction {
+//        case .left:
+//            if self.bridge.processType <= 10 {
+//                self.bridge.processType += 1
+//            }
+//        case .right:
+//            if self.bridge.processType >= 1{
+//                self.bridge.processType -= 1
+//            }
+//        default:
+//            break
+//            
+//        }
+//        
+//        stageLabel.text = "Stage: \(self.bridge.processType)"
 
     }
     
