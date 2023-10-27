@@ -5,6 +5,9 @@
 //  Created by Eric Larson
 //  Copyright © Eric Larson. All rights reserved.
 //
+// Two question.
+//1.100points collection, beacuse the camera FPS is 60. so every second we can get 60 points of three color chanel. When we can get the 100points, we may collect 1.66seconds about 1666 milliseconds.
+//2. The OpenCVBridege as model can directly control the UI to add image in the MainView. So it dose not adhere the paradigm of Model view Controller.
 
 import UIKit
 import AVFoundation
@@ -18,6 +21,7 @@ class ViewController: UIViewController   {
     let pinchFilterIndex = 2
     var detector:CIDetector! = nil
     let bridge = OpenCVBridge()
+    var fingerFlashFlag=false; // for check the flash is from finger
     
     //MARK: Outlets in view
     @IBOutlet weak var flashSlider: UISlider!
@@ -72,7 +76,6 @@ class ViewController: UIViewController   {
         var returnImage=inputImage
         self.bridge.setImage(returnImage, withBounds: returnImage.extent, andContext: self.videoManager.getCIContext())
         let processFingerResult=self.bridge.processFinger()
-        print("this is boolean result\(processFingerResult)")
         returnImage=self.bridge.getImage()
         fingerCoverDectect(coveringBoolFlag: processFingerResult)
         return returnImage
@@ -85,17 +88,27 @@ class ViewController: UIViewController   {
         if coveringBoolFlag==true{  // when something is covering disable the two button
             self.flashButton.isEnabled=false
             self.cameraButton.isEnabled=false
-            
+          //  self.flashSlider.isEnabled=false
         }else{
             self.flashButton.isEnabled=true
             self.cameraButton.isEnabled=true
+         //   self.flashSlider.isEnabled=true
         }
         
         if self.bridge.coverStatus==1{
+            if(self.videoManager.toggleFlash()&&self.fingerFlashFlag==false){
+                self.flashSlider.value = 1.0
+                self.fingerFlashFlag=true;
+             print("flash on.")
+            }
             stageLabel.text="☝️ Finger is covering your camera 📱📸 "
         }else if self.bridge.coverStatus==2{
             stageLabel.text=" Somthing is covering your camera 📱📸"
         }else{
+            if self.fingerFlashFlag{
+                self.flashSlider.value=0.0
+                self.fingerFlashFlag=false;
+            }
             stageLabel.text=""
         }
         
