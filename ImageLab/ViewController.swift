@@ -5,6 +5,9 @@
 //  Created by Eric Larson
 //  Copyright © Eric Larson. All rights reserved.
 //
+// Two question.
+//1.100points collection, beacuse the camera FPS is 60. so every second we can get 60 points of three color chanel. When we can get the 100points, we may collect 1.66seconds about 1666 milliseconds.
+//2. The OpenCVBridege as model can directly control the UI to add image in the MainView. So it dose not adhere the paradigm of Model view Controller.
 
 import UIKit
 import AVFoundation
@@ -18,11 +21,18 @@ class ViewController: UIViewController   {
     let pinchFilterIndex = 2
     var detector:CIDetector! = nil
     let bridge = OpenCVBridge()
+    var fingerFlashFlag=false; // for check the flash is from finger
     
     //MARK: Outlets in view
     @IBOutlet weak var flashSlider: UISlider!
     @IBOutlet weak var stageLabel: UILabel!
     @IBOutlet weak var cameraView: MTKView!
+    
+    //MARK: Two toggle button in view can be disable in part3
+    
+    @IBOutlet weak var flashButton: UIButton!
+    @IBOutlet weak var cameraButton: UIButton!
+    
     
     //MARK: ViewController Hierarchy
     override func viewDidLoad() {
@@ -34,27 +44,79 @@ class ViewController: UIViewController   {
         self.bridge.loadHaarCascade(withFilename: "nose")
         
         self.videoManager = VisionAnalgesic(view: self.cameraView)
-        self.videoManager.setCameraPosition(position: AVCaptureDevice.Position.front)
         
+        // MARK: Part one  set back camera
+        // use the back camera
+        self.videoManager.setCameraPosition(position: AVCaptureDevice.Position.back)// sometimes bug here, sometime back camera, somtime front one
+        
+        
+        // not for finger function below comments
         // create dictionary for face detection
         // HINT: you need to manipulate these properties for better face detection efficiency
-        let optsDetector = [CIDetectorAccuracy:CIDetectorAccuracyHigh,
-                      CIDetectorNumberOfAngles:11,
-                      CIDetectorTracking:false] as [String : Any]
+//        let optsDetector = [CIDetectorAccuracy:CIDetectorAccuracyHigh,
+//                      CIDetectorNumberOfAngles:11,
+//                      CIDetectorTracking:false] as [String : Any]
         
         // setup a face detector in swift
-        self.detector = CIDetector(ofType: CIDetectorTypeFace,
-                                  context: self.videoManager.getCIContext(), // perform on the GPU is possible
-            options: (optsDetector as [String : AnyObject]))
+//        self.detector = CIDetector(ofType: CIDetectorTypeFace,
+//                                  context: self.videoManager.getCIContext(), // perform on the GPU is possible
+//            options: (optsDetector as [String : AnyObject]))
         
-        self.videoManager.setProcessingBlock(newProcessBlock: self.processImageSwift)
+        // MARK: Part One call the processFinger function
+        self.videoManager.setProcessingBlock(newProcessBlock: self.processFinger)// call the process Finger rather than ProcessImageSwift
         
         if !videoManager.isRunning{
-            videoManager.start()
-        }
+            videoManager.start()        }
+        
     
     }
     
+    // MARK: Part one set processFinger
+    func processFinger(inputImage:CIImage) -> CIImage{
+        var returnImage=inputImage
+        self.bridge.setImage(returnImage, withBounds: returnImage.extent, andContext: self.videoManager.getCIContext())
+        let processFingerResult=self.bridge.processFinger()
+        returnImage=self.bridge.getImage()
+        fingerCoverDectect(coveringBoolFlag: processFingerResult)
+        return returnImage
+    }
+    
+    // MARK: PART 3
+    // update the ui one label to show what status for the covering
+    // update the toggle buttons
+    func fingerCoverDectect(coveringBoolFlag:Bool){
+        if coveringBoolFlag==true{  // when something is covering disable the two button
+            self.flashButton.isEnabled=false
+            self.cameraButton.isEnabled=false
+          //  self.flashSlider.isEnabled=false
+        }else{
+            self.flashButton.isEnabled=true
+            self.cameraButton.isEnabled=true
+         //   self.flashSlider.isEnabled=true
+        }
+        
+        // finger cover happen, turn on/off flash, avoid running everytime.
+        if self.bridge.coverStatus==1{
+            if(self.fingerFlashFlag==false){
+                self.videoManager.turnOnFlashwithLevel(1.0)
+                self.fingerFlashFlag=true;
+                print("flash on.")
+            }
+            stageLabel.text="☝️ Finger is covering your camera 📱📸 "
+        }else if self.bridge.coverStatus==2{
+            stageLabel.text=" Somthing is covering your camera 📱📸"
+        }else{
+            if self.fingerFlashFlag{
+                self.videoManager.turnOffFlash()
+                self.fingerFlashFlag=false;
+            }
+            stageLabel.text=""
+        }
+        
+    }
+    
+    
+    // remove this func when i detect the finger
     //MARK: Process image output
     func processImageSwift(inputImage:CIImage) -> CIImage{
         
@@ -114,21 +176,22 @@ class ViewController: UIViewController   {
     
     // change the type of processing done in OpenCV
     @IBAction func swipeRecognized(_ sender: UISwipeGestureRecognizer) {
-        switch sender.direction {
-        case .left:
-            if self.bridge.processType <= 10 {
-                self.bridge.processType += 1
-            }
-        case .right:
-            if self.bridge.processType >= 1{
-                self.bridge.processType -= 1
-            }
-        default:
-            break
-            
-        }
-        
-        stageLabel.text = "Stage: \(self.bridge.processType)"
+       // cancel this function for the assignment
+//        switch sender.direction {
+//        case .left:
+//            if self.bridge.processType <= 10 {
+//                self.bridge.processType += 1
+//            }
+//        case .right:
+//            if self.bridge.processType >= 1{
+//                self.bridge.processType -= 1
+//            }
+//        default:
+//            break
+//            
+//        }
+//        
+//        stageLabel.text = "Stage: \(self.bridge.processType)"
 
     }
     
