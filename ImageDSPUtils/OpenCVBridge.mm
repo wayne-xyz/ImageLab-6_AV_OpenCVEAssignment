@@ -35,23 +35,72 @@ using namespace cv;
     char text[50];
     Scalar avgPixelIntensity;
     
-    // fix the cvtColor
+    // MARK: PART TWO QUESTION??
+    // fix the cvtColor??
     cvtColor(_image, image_copy, CV_BGRA2BGR); // get rid of alpha for processing
     avgPixelIntensity = cv::mean( image_copy );
     // they say that sprintf is depricated, but it still works for c++
-    printf("this process Finger function");
     sprintf(text,"Avg. B: %.0f, G: %.0f, R: %.0f", avgPixelIntensity.val[0],avgPixelIntensity.val[1],avgPixelIntensity.val[2]);
-    cv::putText(_image, text, cv::Point(0, 20), FONT_HERSHEY_PLAIN, 2.0, Scalar::all(255), 1, 2);
+    cv::putText(_image, text, cv::Point(0, 50), FONT_HERSHEY_PLAIN, 3, Scalar::all(255), 1, 2);
     
-    printf("this process Finger function");
-    NSLog(@"val0,%f",avgPixelIntensity.val[0]);
+    // gather 100 data to show on screen
+    // add the red to redarray, blue to blue arry, green to greenarray
+    [_redArray addObject:@(avgPixelIntensity.val[0])];
+    [_blueArray addObject:@(avgPixelIntensity.val[1])];
+    [_greenArray addObject:@(avgPixelIntensity.val[2])];
     
-    //find finger cover the camera
-    if(avgPixelIntensity.val[0]-avgPixelIntensity.val[1]>110){
-        return true;
+        // Convert the redArray into a C++ vector for easier processing
+        std::vector<double> redData;
+        for (NSNumber *number in _redArray) {
+            redData.push_back([number doubleValue]);
+        }
+
+        // Create a Mat for the chart with the same number of channels as _image
+        cv::Mat chart(300, static_cast<int>(redData.size()), _image.type(), cv::Scalar(255, 255, 255));
+
+        // Calculate the maximum value in the red array for scaling the chart
+        double maxValue = 255;
+
+        // Draw the line chart based on red channel values
+        for (size_t i = 1; i < redData.size(); i++) {
+            cv::Point pt1(static_cast<int>(i - 1), 100 - (redData[i - 1] / maxValue) * 100);
+            cv::Point pt2(static_cast<int>(i), 100 - (redData[i] / maxValue) * 100);
+            cv::line(chart, pt1, pt2, cv::Scalar(255, 0, 0), 2);
+        }
+
+        // Overlay the chart onto the main image (top-left corner below the text label)
+        cv::Rect chartROI(cv::Point(0, 80), chart.size());
+        chart.copyTo(_image(chartROI));
+    
+    if(_redArray.count==300){
+        [self initArrays];
     }
+    NSLog(@"redArray: %lu, ", (unsigned long)_redArray.count);
+       
     
+    
+    //set cover statemtn find finger cover the camera
+    if(avgPixelIntensity.val[0]-avgPixelIntensity.val[1]>60){
+        // this is finger cover
+        self.coverStatus=1;
+        return true; // true means somthing is covering
+    }else if (avgPixelIntensity.val[0]+avgPixelIntensity.val[1]+avgPixelIntensity.val[2] <10){
+        // this is something cover, rather than finger
+        self.coverStatus=2;
+        return true; //true means somthing is covering
+    }
+   // NSLog(@"val0: %f,Status: %ld",avgPixelIntensity.val[0],(long)self.coverStatus);
+    self.coverStatus=0;
+        
     return false;
+}
+
+// init my array before using
+-(void)initArrays{
+    // init the array for gethering the rgb 100 before i use to add data
+    _redArray= [NSMutableArray arrayWithCapacity:100];
+    _greenArray= [NSMutableArray arrayWithCapacity:100];
+    _blueArray=[NSMutableArray arrayWithCapacity:100];
 }
 
 
@@ -304,6 +353,8 @@ using namespace cv;
 
 -(instancetype)init{
     self = [super init];
+    
+    [self initArrays];// call the init array function when using it
     
     if(self != nil){
         //self.transform = CGAffineTransformMakeRotation(M_PI_2);

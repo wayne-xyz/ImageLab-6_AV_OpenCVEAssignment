@@ -24,6 +24,12 @@ class ViewController: UIViewController   {
     @IBOutlet weak var stageLabel: UILabel!
     @IBOutlet weak var cameraView: MTKView!
     
+    //MARK: Two toggle button in view can be disable in part3
+    
+    @IBOutlet weak var flashButton: UIButton!
+    @IBOutlet weak var cameraButton: UIButton!
+    
+    
     //MARK: ViewController Hierarchy
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,8 +62,7 @@ class ViewController: UIViewController   {
         self.videoManager.setProcessingBlock(newProcessBlock: self.processFinger)// call the process Finger rather than ProcessImageSwift
         
         if !videoManager.isRunning{
-            videoManager.start()
-        }
+            videoManager.start()        }
     
     }
     
@@ -65,9 +70,34 @@ class ViewController: UIViewController   {
     func processFinger(inputImage:CIImage) -> CIImage{
         var returnImage=inputImage
         self.bridge.setImage(returnImage, withBounds: returnImage.extent, andContext: self.videoManager.getCIContext())
-        self.bridge.processFinger()
+        let processFingerResult=self.bridge.processFinger()
+        print("this is boolean result\(processFingerResult)")
         returnImage=self.bridge.getImage()
+        fingerCoverDectect(coveringBoolFlag: processFingerResult)
         return returnImage
+    }
+    
+    // MARK: PART 3
+    // update the ui one label to show what status for the covering
+    // update the toggle buttons
+    func fingerCoverDectect(coveringBoolFlag:Bool){
+        if coveringBoolFlag==true{  // when something is covering disable the two button
+            self.flashButton.isEnabled=false
+            self.cameraButton.isEnabled=false
+            
+        }else{
+            self.flashButton.isEnabled=true
+            self.cameraButton.isEnabled=true
+        }
+        
+        if self.bridge.coverStatus==1{
+            stageLabel.text="☝️ Finger is covering your camera 📱📸 "
+        }else if self.bridge.coverStatus==2{
+            stageLabel.text=" Somthing is covering your camera 📱📸"
+        }else{
+            stageLabel.text=""
+        }
+        
     }
     
     

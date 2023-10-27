@@ -75,7 +75,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cameraButton" destination="HqB-mz-Xht" id="FRz-g3-3xZ"/>
                         <outlet property="cameraView" destination="Xqm-zI-mYg" id="SUk-4i-PQC"/>
+                        <outlet property="flashButton" destination="fsl-XI-9ND" id="vm3-t7-NQt"/>
                         <outlet property="flashSlider" destination="AZh-I9-zyC" id="cd6-Eh-9cl"/>
                         <outlet property="stageLabel" destination="17Z-Pc-DCH" id="8wP-8W-1JO"/>
                     </connections>

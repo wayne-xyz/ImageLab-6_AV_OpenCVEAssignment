@@ -15,6 +15,13 @@
 @interface OpenCVBridge : NSObject
 
 @property (nonatomic) NSInteger processType;
+@property (nonatomic) NSInteger coverStatus; //0means nocover , 1 finger cover ,2 something other than finger
+
+//MARK: Part 3
+// three array tosave the data
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *redArray;
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *greenArray;
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *blueArray;
 
 
 // set the image for processing later
