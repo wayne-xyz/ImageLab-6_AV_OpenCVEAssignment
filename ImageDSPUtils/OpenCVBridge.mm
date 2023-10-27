@@ -56,23 +56,38 @@ using namespace cv;
         }
 
         // Create a Mat for the chart with the same number of channels as _image
-        cv::Mat chart(300, static_cast<int>(redData.size()), _image.type(), cv::Scalar(255, 255, 255));
+        cv::Mat chart(200, static_cast<int>(_redArray.count), _image.type(), cv::Scalar(255, 255, 255));// use 200 for height
 
         // Calculate the maximum value in the red array for scaling the chart
         double maxValue = 255;
 
-        // Draw the line chart based on red channel values
-        for (size_t i = 1; i < redData.size(); i++) {
-            cv::Point pt1(static_cast<int>(i - 1), 100 - (redData[i - 1] / maxValue) * 100);
-            cv::Point pt2(static_cast<int>(i), 100 - (redData[i] / maxValue) * 100);
-            cv::line(chart, pt1, pt2, cv::Scalar(255, 0, 0), 2);
+        // Draw the green line chart based on green channel values
+        for (size_t i = 1; i < _redArray.count; i++) {
+            cv::Point pt1(static_cast<int>(i - 1), 200 - ([_redArray[i - 1] doubleValue] / maxValue) * 200); //use 200 for more visible scaled chart
+            cv::Point pt2(static_cast<int>(i), 200 - ([_redArray[i] doubleValue] / maxValue) * 200);
+            cv::line(chart, pt1, pt2, cv::Scalar(255, 0, 0), 2); // Use green color for the green line
         }
+    
+        // Draw the green line chart based on green channel values
+        for (size_t i = 1; i < _greenArray.count; i++) {
+            cv::Point pt1(static_cast<int>(i - 1), 200 - ([_greenArray[i - 1] doubleValue] / maxValue) * 200);
+            cv::Point pt2(static_cast<int>(i), 200 - ([_greenArray[i] doubleValue] / maxValue) * 200);
+            cv::line(chart, pt1, pt2, cv::Scalar(0, 255, 0), 2); // Use green color for the green line
+        }
+    
+    // Draw the blue line chart based on green channel values
+        for (size_t i = 1; i < _blueArray.count; i++) {
+            cv::Point pt1(static_cast<int>(i - 1), 200 - ([_blueArray[i - 1] doubleValue] / maxValue) * 200);
+            cv::Point pt2(static_cast<int>(i), 200 - ([_blueArray[i] doubleValue] / maxValue) * 200);
+            cv::line(chart, pt1, pt2, cv::Scalar(0, 0, 255), 2); // Use green color for the green line
+        }
+
 
         // Overlay the chart onto the main image (top-left corner below the text label)
         cv::Rect chartROI(cv::Point(0, 80), chart.size());
         chart.copyTo(_image(chartROI));
     
-    if(_redArray.count==300){
+    if(_redArray.count==100){
         [self initArrays];
     }
     NSLog(@"redArray: %lu, ", (unsigned long)_redArray.count);
