@@ -96,7 +96,7 @@ using namespace cv;
         if(self.capturedFlag){
             cv::putText(_image, "Already captured the 100 Frames'color", cv::Point(0, 350), FONT_HERSHEY_PLAIN, 3, Scalar::all(255), 1, 2);
         }else{
-            sprintf(text,"Capturing the %d/100 Frames'color",_redArray.count);
+            sprintf(text,"Capturing the %lu/100 Frames'color",(unsigned long)_redArray.count);
             cv::putText(_image, text, cv::Point(0, 350), FONT_HERSHEY_PLAIN, 3, Scalar::all(255), 1, 2);
         }
           

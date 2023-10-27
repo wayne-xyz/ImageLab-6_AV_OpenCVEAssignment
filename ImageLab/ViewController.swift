@@ -95,18 +95,19 @@ class ViewController: UIViewController   {
          //   self.flashSlider.isEnabled=true
         }
         
+        // finger cover happen, turn on/off flash
         if self.bridge.coverStatus==1{
-            if(self.videoManager.toggleFlash()&&self.fingerFlashFlag==false){
-                self.flashSlider.value = 1.0
+            if(self.fingerFlashFlag==false){
+                self.videoManager.turnOnFlashwithLevel(1.0)
                 self.fingerFlashFlag=true;
-             print("flash on.")
+                print("flash on.")
             }
             stageLabel.text="☝️ Finger is covering your camera 📱📸 "
         }else if self.bridge.coverStatus==2{
             stageLabel.text=" Somthing is covering your camera 📱📸"
         }else{
             if self.fingerFlashFlag{
-                self.flashSlider.value=0.0
+                self.videoManager.turnOffFlash()
                 self.fingerFlashFlag=false;
             }
             stageLabel.text=""
