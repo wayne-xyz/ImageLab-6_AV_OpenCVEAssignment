@@ -95,7 +95,7 @@ class ViewController: UIViewController   {
          //   self.flashSlider.isEnabled=true
         }
         
-        // finger cover happen, turn on/off flash
+        // finger cover happen, turn on/off flash, avoid running everytime.
         if self.bridge.coverStatus==1{
             if(self.fingerFlashFlag==false){
                 self.videoManager.turnOnFlashwithLevel(1.0)
