@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *redArray;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *greenArray;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *blueArray;
+@property (nonatomic) bool capturedFlag; //default false which means didnt start catch
 
 
 // set the image for processing later

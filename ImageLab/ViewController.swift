@@ -63,6 +63,7 @@ class ViewController: UIViewController   {
         
         if !videoManager.isRunning{
             videoManager.start()        }
+        
     
     }
     
