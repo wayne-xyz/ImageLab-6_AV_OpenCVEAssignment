@@ -40,7 +40,7 @@ using namespace cv;
     cvtColor(_image, image_copy, CV_BGRA2BGR); // get rid of alpha for processing
     avgPixelIntensity = cv::mean( image_copy );
     // they say that sprintf is depricated, but it still works for c++
-    sprintf(text,"Avg. B: %.0f, G: %.0f, R: %.0f", avgPixelIntensity.val[0],avgPixelIntensity.val[1],avgPixelIntensity.val[2]);
+    sprintf(text,"Avg. R: %.0f, G: %.0f, B: %.0f", avgPixelIntensity.val[0],avgPixelIntensity.val[1],avgPixelIntensity.val[2]);
     cv::putText(_image, text, cv::Point(0, 50), FONT_HERSHEY_PLAIN, 3, Scalar::all(255), 1, 2);
     
     
@@ -54,8 +54,8 @@ using namespace cv;
         // gather 100 data to show on screen when finger is cover the camera
         // add the red to redarray, blue to blue arry, green to greenarray
         [_redArray addObject:@(avgPixelIntensity.val[0])];
-        [_blueArray addObject:@(avgPixelIntensity.val[1])];
-        [_greenArray addObject:@(avgPixelIntensity.val[2])];
+        [_greenArray addObject:@(avgPixelIntensity.val[1])];
+        [_blueArray addObject:@(avgPixelIntensity.val[2])];
         
             // Convert the redArray into a C++ vector for easier processing
             std::vector<double> redData;
